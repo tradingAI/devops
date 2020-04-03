@@ -8,6 +8,7 @@ services:
         environment:
         MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
         MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+        restart: always
         container_name: minio
         volumes:
         - ${MINIO_DATA}:/data

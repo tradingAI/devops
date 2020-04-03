@@ -7,6 +7,7 @@ export MINIO_SECRET_KEY=tradingAI
 export MINIO_PORT=9000
 export MINIO_DATA=/home/ubuntu/data/minio/data
 export KIBANA_PORT=5601
+export REDIS_PORT=6379
 
 up_grafana:
 	cd grafana && docker-compose up -d
@@ -31,3 +32,11 @@ up_kibana:
 
 down_kibana:
 	cd kibana && docker-compose down
+
+up_redis:
+	cd redis && docker-compose up -d
+
+down_redis:
+	cd redis && docker-compose down
+
+
