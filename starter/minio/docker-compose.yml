@@ -4,12 +4,12 @@ services:
     minio:
         image: minio/minio:latest
         ports:
-        - ${MINIO_PORT}:9000
+            - ${MINIO_PORT}:9000
         environment:
-        MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-        MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+            MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+            MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
         restart: always
         container_name: minio
         volumes:
-        - ${MINIO_DATA}:/data
+            - ${MINIO_DATA}:/data
         command: ["server", "/data"]
