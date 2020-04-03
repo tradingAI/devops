@@ -1,7 +1,8 @@
 # devops
 
 - ## install
-  [devops/install](devops/install) 内包含了系统的装机脚本。
+  [devops/install](install) 内包含了系统的装机脚本。
 
 - ## starter
-  [devops/starter](devops/starter) 内包含了需要用到的运维相关容器配置。
+  [devops/starter](starter) 内包含了需要用到的运维相关容器配置。  
+  请查看[Makefile](Makefile) 按需修改配置
