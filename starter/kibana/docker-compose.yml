@@ -1,10 +1,9 @@
-
 version: '3'
 services:
   elasticsearch:
     image: bitnami/elasticsearch:latest
     volumes:
-      - /home/ubuntu/data/elasticsearch:/bitnami
+      - ${ELASTICSEARCH_DATA}:/bitnami
     restart: always
     container_name: elasticsearch
   kibana:
@@ -12,7 +11,7 @@ services:
     ports:
       - ${KIBANA_PORT}:5601
     volumes:
-      - /home/ubuntu/data/kibana:/bitnami
+      - ${KIBANA_DATA}:/bitnami
     restart: always
     container_name: kibana
     depends_on:
