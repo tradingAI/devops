@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+    redis:
+        image: redis:latest
+        ports:
+            - ${REDIS_PORT}:6379
+        restart: always
+        container_name: redis
