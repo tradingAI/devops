@@ -1,0 +1,22 @@
+
+version: '3'
+services:
+  elasticsearch:
+    image: bitnami/elasticsearch:latest
+    volumes:
+      - /home/ubuntu/data/elasticsearch:/bitnami
+    container_name: elasticsearch
+  kibana:
+    image: bitnami/kibana:latest
+    ports:
+      - ${KIBANA_PORT}:5601
+    volumes:
+      - /home/ubuntu/data/kibana:/bitnami
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+volumes:
+  elasticsearch_data:
+    driver: local
+  kibana_data:
+    driver: local
