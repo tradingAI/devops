@@ -12,7 +12,7 @@ tail_files: true
 setup.kibana:
   host: kibana:5601
   username: elastic
-  password: changeme
+  password: ${ELK_PASSWORD}
 
 output.logstash:
   hosts: ["logstash:5044"]
@@ -26,4 +26,4 @@ processors:
      - from: "docker.container.name"
        to: "containername"
 - drop_fields:
-    fields: ["docker","metadata","beat","input","prospector","host","source", "offset", "beat", "log.file.path"]
+    fields: ["docker","metadata","beat","input","prospector","host","source", "offset", "beat"]
