@@ -1,0 +1,83 @@
+version: '3.2'
+
+services:
+  elasticsearch:
+    build:
+      context: elasticsearch/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - "./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro"
+      - "${ELASTICSEARCH_DATA}:/usr/share/elasticsearch/data"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    restart: always
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTIC_PASSWORD: ${ELK_PASSWORD}
+      # Use single node discovery in order to disable production mode and avoid bootstrap checks
+      # see https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
+      discovery.type: single-node
+    networks:
+      - elk
+
+  logstash:
+    build:
+      context: logstash/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - "./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro"
+      - "./logstash/pipeline:/usr/share/logstash/pipeline:ro"
+    ports:
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
+      - "5044:5044"
+    restart: always
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELK_PASSWORD: ${ELK_PASSWORD}
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    build:
+      context: kibana/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - "./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro"
+    ports:
+      - "5601:5601"
+    environment:
+      ELK_PASSWORD: ${ELK_PASSWORD}
+    restart: always
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.6.2
+    user: root
+    container_name: filebeat
+    command: filebeat -e -strict.perms=false
+    volumes:
+      - "./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"
+      - "/var/lib/docker/containers:/var/log/docker:ro"
+      - "/tmp/filebeat/registry/:/usr/share/filebeat/data/registry/"
+    environment:
+      ELK_PASSWORD: ${ELK_PASSWORD}
+    restart: always
+    networks:
+      - elk
+    depends_on:
+      - logstash
+
+networks:
+  elk:
+    driver: bridge
