@@ -11,8 +11,6 @@ install:
 
 up:
 	docker-compose up -d
-
-web:
 	docker-compose -f docker-compose-web.yml up -d
 
 down:
