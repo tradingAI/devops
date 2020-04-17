@@ -1,0 +1,50 @@
+version: '3.4'
+services:
+  client:
+    image: vesoft/nebula-http-client:latest
+    environment:
+      USER: root
+    ports:
+      - 8080
+    networks:
+      - nebula-web
+  web:
+    image: vesoft/nebula-graph-studio:latest
+    environment:
+      USER: root
+      UPLOAD_DIR: /data/nubula
+    ports:
+      - 7001
+    depends_on:
+      - client
+    volumes:
+      - ./data/web:/data/nubula:rw
+    networks:
+      - nebula-web
+  importer:
+    image: vesoft/nebula-importer:latest
+    networks:
+      - nebula-web
+    ports:
+      - 5699
+    volumes:
+      - ./data/web:/data/nubula:rw
+    command:
+      - "--port=5699"
+      - "--callback=http://nginx:7001/api/import/finish"
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/nebula.conf
+      - ./data/nginx:/data/nubula:rw
+    depends_on:
+      - client
+      - web
+      - importer
+    networks:
+      - nebula-web
+    ports:
+      - 7001:7001
+
+networks:
+  nebula-web:
