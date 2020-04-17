@@ -14,6 +14,7 @@ up:
 
 down:
 	docker-compose down
+	docker-compose -f docker-compose-web.yml down
 
 web:
 	docker-compose -f docker-compose-web.yml up
@@ -26,3 +27,4 @@ clean:
 	rm -rf ./data/storage1/nebula/*
 	rm -rf ./data/storage2/nebula/*
 	rm -rf ./data/web/*
+	rm -rf ./logs/*
